@@ -39,14 +39,15 @@ const SignUpForm = () => {
                             First Name:
                         </label>
                         <input
-                            type="numeric"
+                            type="text"
                             {...register("firstName")}
                             className="shadow-xs bg-light border border-accent text-dark text-sm rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5 "
-                            required
                         />
-                        <p className="mt-2 text-sm text-green-700">
-                            <span className="font-medium">Ok :)</span> Username
-                            available!
+                        <p className="mt-2 text-xs font-medium text-red-700">
+                            <span className="mr-1">
+                                {errors.firstName && "Error!"}
+                            </span>
+                            {errors.firstName?.message}
                         </p>
                     </div>
 
@@ -61,17 +62,19 @@ const SignUpForm = () => {
                             type="text"
                             {...register("lastName")}
                             className="shadow-xs bg-light border border-accent text-dark text-sm rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5 "
-                            required
                         />
-                        <p className="mt-2 text-sm text-green-700">
-                            <span className="font-medium">Ok :)</span> Username
-                            available!
+                        <p className="mt-2 font-medium text-xs text-red-700">
+                            <span className="mr-1">
+                                {" "}
+                                {errors.lastName && "Error!"}
+                            </span>{" "}
+                            {errors.lastName?.message}
                         </p>
                     </div>
                 </div>
                 <div className="mb-5 w-full">
                     <label
-                        htmlFor="email"
+                        htmlFor="text"
                         className="block mb-2 text-sm font-medium text-dark"
                     >
                         Email:
@@ -81,11 +84,13 @@ const SignUpForm = () => {
                         {...register("email")}
                         className="shadow-xs bg-light border border-accent text-dark text-sm rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5 "
                         placeholder="youemail@email.com"
-                        required
                     />
-                    <p className="mt-2 text-sm text-green-700">
-                        <span className="font-medium">Ok :)</span> Username
-                        available!
+                    <p className="mt-2 font-medium text-xs text-red-700">
+                        <span className="mr-1">
+                            {" "}
+                            {errors.email && "Error!"}
+                        </span>{" "}
+                        {errors.email?.message}
                     </p>
                 </div>
                 <div className="mb-5  w-full">
@@ -99,11 +104,13 @@ const SignUpForm = () => {
                         type="numeric"
                         {...register("phoneNumber")}
                         className="shadow-xs bg-light border border-accent text-dark text-sm rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5 "
-                        required
                     />
-                    <p className="mt-2 text-sm text-green-700">
-                        <span className="font-medium">Ok :)</span> Username
-                        available!
+                    <p className="mt-2 text-xs font-medium text-red-700">
+                        <span className="mr-1">
+                            {" "}
+                            {errors.phoneNumber && "Error!"}
+                        </span>{" "}
+                        {errors.phoneNumber?.message}
                     </p>
                 </div>
 
