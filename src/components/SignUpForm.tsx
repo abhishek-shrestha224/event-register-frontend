@@ -1,27 +1,26 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SignUpFormSchema } from "@/lib/schema";
+import { z } from "zod";
 
-type SignUpInput = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-};
+type Inputs = z.infer<typeof SignUpFormSchema>;
 const SignUpForm = () => {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
-    } = useForm<SignUpInput>({
-        defaultValues: {
-            firstName: "",
-            lastName: "",
-            email: "",
-            phoneNumber: "",
-        },
+    } = useForm<Inputs>({
+        resolver: zodResolver(SignUpFormSchema),
     });
+
+    const processForm: SubmitHandler<Inputs> = (data) => {
+        reset();
+        console.log(data);
+    };
 
     return (
         <div className="border-2 lg:w-1/3 center-content flex-col gap-4 px-4 py-12">
@@ -29,9 +28,7 @@ const SignUpForm = () => {
 
             <form
                 className="w-[90%]  mx-auto center-content flex-col"
-                onSubmit={handleSubmit((data) => {
-                    console.log(data);
-                })}
+                onSubmit={handleSubmit(processForm)}
             >
                 <div className="mb-5  w-full flex justify-between ">
                     <div className=" w-[48%]">
