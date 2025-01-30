@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpFormSchema } from "@/lib/schema";
 import { z } from "zod";
+import { registerUser } from "@/utils/actions";
 
 type Inputs = z.infer<typeof SignUpFormSchema>;
 const SignUpForm = () => {
@@ -17,9 +18,24 @@ const SignUpForm = () => {
         resolver: zodResolver(SignUpFormSchema),
     });
 
-    const processForm: SubmitHandler<Inputs> = (data) => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const processForm: SubmitHandler<Inputs> = async (data) => {
+        setIsLoading(true);
+        const result = await registerUser(data);
+
+        if (!result) {
+            console.error("Something Went Wrong");
+            return;
+        }
+
+        if (result.error) {
+            console.error(result.error);
+            return;
+        }
         reset();
         console.log(data);
+        setIsLoading(false);
     };
 
     return (
@@ -117,8 +133,9 @@ const SignUpForm = () => {
                 <button
                     type="submit"
                     className="text-light bg-accent hover:opacity-90 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                    disabled={isLoading}
                 >
-                    Register new account
+                    {isLoading ? "Loading..." : "Submit"}
                 </button>
             </form>
         </div>
