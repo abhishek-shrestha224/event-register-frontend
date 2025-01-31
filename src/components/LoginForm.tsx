@@ -13,7 +13,7 @@ const LoginForm = () => {
         register,
         handleSubmit,
         reset,
-
+        setError,
         formState: { errors },
     } = useForm<Inputs>({
         resolver: zodResolver(LoginFormSchema),
@@ -27,11 +27,16 @@ const LoginForm = () => {
 
         if (!result) {
             console.error("Something Went Wrong");
+            setIsLoading(false);
             return;
         }
 
         if (result.error) {
-            console.error(result.error);
+            setError("email", {
+                type: "manual",
+                message: result.error,
+            });
+            setIsLoading(false);
             return;
         }
         reset();

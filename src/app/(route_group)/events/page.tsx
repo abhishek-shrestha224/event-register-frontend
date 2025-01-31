@@ -19,8 +19,10 @@ const Page = async () => {
                                     className="text-left px-4 font-bold lg:text-lg"
                                 >
                                     <p className="font-bold">{event.name}</p>
-                                    <p className="font-medium">{event.email}</p>
-                                    <p className="font-medium">{event.body}</p>
+                                    <p className="font-medium">{event.venue}</p>
+                                    <p className="font-medium">
+                                        {event.eventDate}
+                                    </p>
                                 </div>
                             ))}
                     </Suspense>
