@@ -1,9 +1,12 @@
 "use server";
 
 import { z } from "zod";
-import { SignUpFormSchema } from "@/lib/schema";
+import { LoginFormSchema, SignUpFormSchema } from "@/lib/schema";
+import { FieldValues, UseFormSetError } from "react-hook-form";
 
 type UserCreate = z.infer<typeof SignUpFormSchema>;
+
+type UserLogin = z.infer<typeof LoginFormSchema>;
 
 export async function registerUser(data: UserCreate) {
     const result = SignUpFormSchema.safeParse(data);
@@ -23,22 +26,69 @@ export async function registerUser(data: UserCreate) {
     }
 }
 
-export async function getTodos() {
+export async function loginUser(
+    data: UserLogin,
+    setError: UseFormSetError<FieldValues>
+) {
+    // Validate input using Zod schema
+    const result = LoginFormSchema.safeParse(data);
+
+    if (!result.success) {
+        setError("email", {
+            type: "validation",
+            message: "Invalid input. Please check your email.",
+        });
+        return { data: null, error: result.error.format() };
+    }
+
     try {
         const response = await fetch(
-            "https://jsonplaceholder.typicode.com/todos",
+            `${process.env.NEXT_PUBLIC_API_URL}/login`,
             {
-                cache: "no-store",
+                method: "POST",
+                credentials: "include", // Ensures cookies are sent
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
             }
         );
 
-        if (!response.ok) {
-            throw new Error("Failed to fetch todos");
+        if (response.status === 422) {
+            setError("email", {
+                type: "validation",
+                message: "Email validation failed or missing.",
+            });
+            return { data: null, error: "Validation failed" };
         }
 
-        return await response.json();
+        if (response.status === 404) {
+            setError("email", {
+                type: "not_found",
+                message: "Email does not exist.",
+            });
+            return { data: null, error: "Email not found" };
+        }
+
+        if (response.status === 500) {
+            setError("email", {
+                type: "server_error",
+                message: "Internal server error. Please try again later.",
+            });
+            return { data: null, error: "Server error" };
+        }
+
+        if (!response.ok) {
+            throw new Error("Something went wrong");
+        }
+
+        const userData = await response.json();
+        return { data: userData, error: null };
     } catch (error) {
-        console.error("Error fetching todos:", error);
-        return [];
+        setError("email", {
+            type: "network",
+            message: "Network error. Please try again.",
+        });
+        return { data: null, error: "Something Went Wrong!" };
     }
 }

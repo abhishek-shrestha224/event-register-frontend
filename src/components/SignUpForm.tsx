@@ -51,7 +51,7 @@ const SignUpForm = () => {
             <h3 className="lg:text-3xl font-bold">Sign Up Form</h3>
 
             <form
-                className="w-[90%]  mx-auto center-content flex-col"
+                className="w-[90%] mx-auto center-content flex-col"
                 onSubmit={handleSubmit(processForm)}
             >
                 <div className="mb-2  w-full flex justify-between ">
@@ -67,6 +67,7 @@ const SignUpForm = () => {
                             {...register("firstName")}
                             className="shadow-xs bg-light border border-accent text-dark text-sm rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5 "
                             placeholder="John"
+                            autoComplete="off"
                         />
                         <p className="mt-2 text-xs font-medium text-red-700">
                             <span className="mr-1">
@@ -153,7 +154,7 @@ const SignUpForm = () => {
             <div className="h-4 text-sm font-bold text-accent flex gap-2">
                 {isSuccess && (
                     <>
-                        <p>Registration Successfull! Continue to Login</p>
+                        <p>Registration Successfull! Please Proceed to Login</p>
                         <button
                             onClick={() => setIsSuccess(false)}
                             type="button"

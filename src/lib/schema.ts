@@ -35,3 +35,18 @@ export const SignUpFormSchema = z.object({
             message: "Phone number must have valid format",
         }),
 });
+
+export const LoginFormSchema = z.object({
+    email: z
+        .string()
+        .email("Invalid email address")
+        .nonempty("Email is required")
+        .trim()
+        .refine(
+            (value) =>
+                !/\b(?:tempmail|guerrillamail|mailinator)\.com\b/.test(value),
+            {
+                message: "Disposable email addresses are not allowed",
+            }
+        ),
+});
