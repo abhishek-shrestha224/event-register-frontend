@@ -8,6 +8,13 @@ type UserCreate = z.infer<typeof SignUpFormSchema>;
 
 type UserLogin = z.infer<typeof LoginFormSchema>;
 
+type Event = {
+    id: number;
+    name: string;
+    email: string;
+    body: string;
+};
+
 export async function registerUser(data: UserCreate) {
     const result = SignUpFormSchema.safeParse(data);
 
@@ -90,5 +97,28 @@ export async function loginUser(
             message: "Network error. Please try again.",
         });
         return { data: null, error: "Something Went Wrong!" };
+    }
+}
+
+export async function getAllEvents(): Promise<{
+    err: boolean;
+    data: Event[] | null;
+}> {
+    try {
+        const res = await fetch(
+            "https://jsonplaceholder.typicode.com/comments"
+        );
+
+        const data = await res.json();
+
+        return {
+            err: false,
+            data: data,
+        };
+    } catch (error) {
+        return {
+            err: false,
+            data: null,
+        };
     }
 }

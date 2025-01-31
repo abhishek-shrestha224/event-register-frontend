@@ -1,7 +1,7 @@
 import React from "react";
 
 const Page = () => {
-    return <div>Page</div>;
+    return <section className="pt-20 w-full min-h-screen">Page</section>;
 };
 
 export default Page;
