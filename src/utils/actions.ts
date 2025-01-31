@@ -2,36 +2,55 @@
 
 import { z } from "zod";
 import { LoginFormSchema, SignUpFormSchema } from "@/lib/schema";
+import { User, Event } from "@/lib/dto";
 
 type UserCreate = z.infer<typeof SignUpFormSchema>;
 
 type UserLogin = z.infer<typeof LoginFormSchema>;
 
-type Event = {
-    id: number;
-    name: string;
-    venue: string;
-    eventDate: string;
-};
-
-export async function registerUser(data: UserCreate) {
+export async function registerUser(
+    data: UserCreate
+): Promise<{ data: User | undefined; error: string | undefined }> {
     const result = SignUpFormSchema.safeParse(data);
 
-    if (result.error) {
-        return false;
+    if (!result.success) {
+        return { data: undefined, error: "Form Validation Failed!" };
     }
+    try {
+        const response = await fetch("http://localhost:8080/users", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
 
-    if (result.success) {
-        return true;
+        if (response.status === 400) {
+            throw new Error("404-Bad Request");
+        }
+
+        if (!response.ok) {
+            throw new Error("500-Internal Server Error");
+        }
+
+        const userData = await response.json();
+        return { data: userData, error: undefined };
+    } catch (err) {
+        if (err instanceof Error) {
+            return { data: undefined, error: err.message };
+        } else {
+            return { data: undefined, error: "Something Went Wrong" };
+        }
     }
 }
 
-export async function loginUser(data: UserLogin) {
-    // Validate input using Zod schema
+export async function loginUser(
+    data: UserLogin
+): Promise<{ data: User | undefined; error: string | undefined }> {
     const result = LoginFormSchema.safeParse(data);
 
     if (!result.success) {
-        return { error: "Form Validation Failed!" };
+        return { data: undefined, error: "Form Validation Failed!" };
     }
 
     try {
@@ -44,26 +63,25 @@ export async function loginUser(data: UserLogin) {
         });
 
         if (response.status === 422) {
-            return { error: "Unprocessable Entity!" };
+            throw new Error("422-Unprocessable Entity");
         }
 
         if (response.status === 404) {
-            return { error: "User with email not found!" };
-        }
-
-        if (response.status === 500) {
-            return { error: "Internal Server Error!" };
+            throw new Error("404-Not Found");
         }
 
         if (!response.ok) {
-            throw new Error("Something went wrong");
+            throw new Error("500-Internal Server Error");
         }
 
         const userData = await response.json();
-        localStorage.setItem("user", JSON.stringify(userData));
-        return { error: undefined };
-    } catch (error) {
-        return { error: "Something Went Wrong!" };
+        return { data: userData, error: undefined };
+    } catch (err) {
+        if (err instanceof Error) {
+            return { data: undefined, error: err.message };
+        } else {
+            return { data: undefined, error: "Something Went Wrong" };
+        }
     }
 }
 

@@ -3,11 +3,13 @@
 import { LoginFormSchema } from "@/lib/schema";
 import { loginUser } from "@/utils/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect } from "next/navigation";
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
 type Inputs = z.infer<typeof LoginFormSchema>;
+
 const LoginForm = () => {
     const {
         register,
@@ -40,9 +42,8 @@ const LoginForm = () => {
             return;
         }
         reset();
-        console.log(data);
-
         setIsLoading(false);
+        redirect("/events");
     };
 
     return (
