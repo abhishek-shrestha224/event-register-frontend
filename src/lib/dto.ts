@@ -6,10 +6,11 @@ export type Event = {
 };
 
 export type User = {
-    id: number;
-    name: string;
-    venue: string;
-    eventDate: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    badges: Badge[];
 };
 
 export type RegistrationType =
