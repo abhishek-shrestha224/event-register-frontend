@@ -28,7 +28,6 @@ const LoginForm = () => {
         const result = await loginUser(data);
 
         if (!result) {
-            console.error("Something Went Wrong");
             setIsLoading(false);
             return;
         }
@@ -40,6 +39,10 @@ const LoginForm = () => {
             });
             setIsLoading(false);
             return;
+        }
+        if (result.data) {
+            console.log(result.data);
+            localStorage.setItem("user", JSON.stringify(result.data));
         }
         reset();
         setIsLoading(false);
