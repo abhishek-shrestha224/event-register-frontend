@@ -17,14 +17,7 @@ const Navbar = () => {
                 >
                     Events
                 </Link>
-                <Link
-                    className={`${
-                        pathname === "/badges" && "border-b-2"
-                    } hover:text-dark hover:border-black w-24 text-center border-accent`}
-                    href="/badges"
-                >
-                    Badges
-                </Link>
+
                 <Link
                     className={`${
                         pathname === "/me" && "border-b-2"

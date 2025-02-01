@@ -1,5 +1,7 @@
+import { UUID } from "crypto";
+
 export type Event = {
-    id: number;
+    id: UUID;
     name: string;
     venue: string;
     eventDate: string;
@@ -21,7 +23,7 @@ export type RegistrationType =
     | "ATTENDEE";
 
 export type Badge = {
-    id: number;
+    id: UUID;
     event: Event;
     userEmail: string;
     photoPath: string;

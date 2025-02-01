@@ -17,7 +17,7 @@ export async function registerUser(
         return { data: undefined, error: "Form Validation Failed!" };
     }
     try {
-        const response = await fetch("http://localhost:8080/users", {
+        const res = await fetch("http://localhost:8080/users", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -25,15 +25,15 @@ export async function registerUser(
             body: JSON.stringify(data),
         });
 
-        if (response.status === 400) {
+        if (res.status === 400) {
             throw new Error("404-Bad Request");
         }
 
-        if (!response.ok) {
+        if (!res.ok) {
             throw new Error("500-Internal Server Error");
         }
 
-        const userData = await response.json();
+        const userData = await res.json();
         return { data: userData, error: undefined };
     } catch (err) {
         if (err instanceof Error) {
@@ -54,7 +54,7 @@ export async function loginUser(
     }
 
     try {
-        const response = await fetch("http://localhost:8080/users/check", {
+        const res = await fetch("http://localhost:8080/users/check", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -62,19 +62,19 @@ export async function loginUser(
             },
         });
 
-        if (response.status === 422) {
+        if (res.status === 422) {
             throw new Error("422-Unprocessable Entity");
         }
 
-        if (response.status === 404) {
+        if (res.status === 404) {
             throw new Error("404-Not Found");
         }
 
-        if (!response.ok) {
+        if (!res.ok) {
             throw new Error("500-Internal Server Error");
         }
 
-        const userData = await response.json();
+        const userData = await res.json();
         return { data: userData, error: undefined };
     } catch (err) {
         if (err instanceof Error) {
@@ -92,8 +92,12 @@ export async function getAllEvents(): Promise<{
     try {
         const res = await fetch("http://localhost:8080/events");
 
-        const data = await res.json();
+        if (!res.ok) {
+            throw new Error("500-Internal Server Error");
+        }
 
+        const data = await res.json();
+        console.log(data);
         return {
             err: false,
             data: data,
