@@ -23,7 +23,7 @@ const Page = () => {
     }, []);
 
     const handleRegister = async (id: string) => {
-        router.push(`/me/${id}`);
+        router.push(`/events/${id}/register`);
     };
 
     return (

@@ -11,7 +11,7 @@ const Navbar = () => {
             <nav className="lg:w-1/3 flex justify-between font-bold text-lg text-accent">
                 <Link
                     className={`${
-                        pathname === "/events" && "border-b-2"
+                        pathname.startsWith("/events") && "border-b-2"
                     } hover:text-dark hover:border-black w-24 text-center border-accent`}
                     href="/events"
                 >
@@ -20,7 +20,7 @@ const Navbar = () => {
 
                 <Link
                     className={`${
-                        pathname === "/me" && "border-b-2"
+                        pathname.startsWith("/me") && "border-b-2"
                     } hover:text-dark hover:border-black w-24 text-center border-accent`}
                     href="/me"
                 >
