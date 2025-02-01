@@ -20,13 +20,50 @@ const EventRegistrationForm = () => {
     const {
         register,
         handleSubmit,
+        setError,
         reset,
         formState: { errors },
     } = useForm<Inputs>();
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+    const onSubmit: SubmitHandler<Inputs> = async (formData) => {
+        setIsLoading(true);
+        console.log(formData);
+
+        const { at, message } = await registerToEvent(formData);
+
+        console.log("at: ", at);
+        console.log("message: ", message);
+
+        if (at === "registrationType") {
+            setError("registrationType", {
+                type: "manual",
+                message: message ?? "Invalid registration type",
+            });
+        }
+
+        if (at === "photo") {
+            setError("photo", {
+                type: "manual",
+                message: message ?? "Invalid file",
+            });
+        }
+
+        if (!at && message) {
+            setErrorMessage(message);
+        }
+
+        console.log(errors); // Log errors to verify if they are being updated
+
+        // Reset the form only if there are no errors
+        if (!at) {
+            reset();
+        }
+
+        setIsLoading(false);
+    };
+
     return (
         <div>
             <h3 className="lg:text-3xl font-bold">Registration Form</h3>
@@ -72,6 +109,10 @@ const EventRegistrationForm = () => {
                         className="rounded-md shadow-xs bg-light border border-accent w-full"
                         {...register("photo")}
                     />
+                    <p className="mt-2 text-xs font-medium text-red-700">
+                        <span className="mr-1">{errors.photo && "Error!"}</span>
+                        {errors.photo?.message}
+                    </p>
                 </div>
 
                 <button
