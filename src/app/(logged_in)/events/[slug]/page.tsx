@@ -1,5 +1,5 @@
 import Error from "@/components/Error";
-import EventRegistrationForm from "@/components/EventRegistrationForm";
+import EventRegisterForm from "@/components/EventRegisterForm";
 import { getEventById } from "@/utils/actions";
 
 export default async function Page({
@@ -31,7 +31,7 @@ export default async function Page({
                                 <p>{data.eventDate}</p>
                             </div>
                         </main>
-                        <EventRegistrationForm />
+                        <EventRegisterForm />
                     </>
                 )}
             </div>
