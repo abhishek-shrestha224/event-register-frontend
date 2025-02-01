@@ -50,36 +50,3 @@ export const LoginFormSchema = z.object({
             }
         ),
 });
-
-export const RegisterFormSchema = z.object({
-    registrationType: z.enum(
-        ["ORGANIZER", "VOLUNTEER", "SPEAKER", "VIP", "ATTENDEE"],
-        {
-            errorMap: (issue) => {
-                return { message: "Invalid registration type." };
-            },
-        }
-    ),
-    photo: z
-        .object({
-            file: z
-                .instanceof(File)
-                .refine((file) => /\.(jpg|jpeg|png)$/i.test(file.name), {
-                    message:
-                        "Invalid file type. Only JPG, JPEG, and PNG files are allowed.",
-                })
-                .refine((file) => file.size <= 2 * 1024 * 1024, {
-                    message: "File size must be less than 2MB.",
-                })
-                .refine(
-                    (file) => /^[a-zA-Z0-9_]+$/.test(file.name.split(".")[0]),
-                    {
-                        message:
-                            "Filename can only contain letters, numbers, and underscores.",
-                    }
-                ),
-        })
-        .refine((data) => data.file !== null, {
-            message: "File is required.",
-        }),
-});

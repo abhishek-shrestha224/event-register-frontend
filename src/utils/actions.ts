@@ -1,11 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import {
-    LoginFormSchema,
-    RegisterFormSchema,
-    SignUpFormSchema,
-} from "@/lib/schema";
+import { LoginFormSchema, SignUpFormSchema } from "@/lib/schema";
 import { User, Event } from "@/lib/dto";
 import { UUID } from "crypto";
 import { validate } from "uuid";
@@ -13,8 +9,6 @@ import { validate } from "uuid";
 type UserCreate = z.infer<typeof SignUpFormSchema>;
 
 type UserLogin = z.infer<typeof LoginFormSchema>;
-
-type EventRegister = z.infer<typeof RegisterFormSchema>;
 
 export async function registerUser(
     data: UserCreate
@@ -52,18 +46,16 @@ export async function registerUser(
     }
 }
 
-export async function registerFOrEvent(
-    data: EventRegister
-): Promise<{ data: EventRegister | undefined; error: string | undefined }> {
-    console.log(data);
-    const result = RegisterFormSchema.safeParse(data);
+export async function registerToEvent(formData: {
+    registrationType: string;
+    photo: File;
+}): Promise<{
+    data: { registrationType: string; photo: File } | undefined;
+    error: string | undefined;
+}> {
+    console.log("callewd");
 
-    if (!result.success) {
-        console.log("Validation Failed");
-        return { data: undefined, error: "Form Validation Failed!" };
-    }
-
-    return { data: result.data, error: undefined };
+    return { data: formData, error: "abc" };
 }
 
 export async function loginUser(

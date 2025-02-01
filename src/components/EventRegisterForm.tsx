@@ -1,25 +1,40 @@
 "use client";
-import { RegisterFormSchema } from "@/lib/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { BsUpload } from "react-icons/bs";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
-type Inputs = z.infer<typeof RegisterFormSchema>;
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useState } from "react";
+
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { registerToEvent } from "@/utils/actions";
+import Error from "./Error";
+
+type Inputs = {
+    registrationType: string;
+    photo: File;
+};
+
 const EventRegistrationForm = () => {
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(
+        undefined
+    );
     const {
         register,
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm<Inputs>({
-        resolver: zodResolver(RegisterFormSchema),
-    });
+    } = useForm<Inputs>();
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
     return (
         <div>
             <h3 className="lg:text-3xl font-bold">Registration Form</h3>
-            <form className="auto center-content flex-col">
+            <Error error={errorMessage} />
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="auto center-content flex-col"
+            >
                 <div className="w-full mt-8">
                     <label
                         htmlFor="registrationType"
@@ -46,29 +61,17 @@ const EventRegistrationForm = () => {
                         {errors.registrationType?.message}
                     </p>
                 </div>
-                <div className="w-full rounded-md shadow-xs bg-light border border-accent">
+                <div className="w-full ">
                     <label
-                        htmlFor="dropzone-file"
+                        htmlFor="photo"
                         className="block mb-2 text-sm font-medium text-dark"
-                    >
-                        <div className="flex flex-col gap-2 items-center text-gray-500 justify-center pt-5 pb-6">
-                            <BsUpload fontSize={30} />
-                            <p className="mb-2 text-sm">
-                                <span className="font-semibold">
-                                    Click to upload
-                                </span>{" "}
-                                or drag and drop
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                PNG, JPG or JPEG (MAX. 2MB)
-                            </p>
-                        </div>
-                        <input
-                            id="dropzone-file"
-                            type="file"
-                            className="hidden"
-                        />
-                    </label>
+                    ></label>
+                    <input
+                        id="photo"
+                        type="file"
+                        className="rounded-md shadow-xs bg-light border border-accent w-full"
+                        {...register("photo")}
+                    />
                 </div>
 
                 <button
