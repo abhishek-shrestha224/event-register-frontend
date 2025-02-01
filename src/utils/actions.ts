@@ -3,6 +3,8 @@
 import { z } from "zod";
 import { LoginFormSchema, SignUpFormSchema } from "@/lib/schema";
 import { User, Event } from "@/lib/dto";
+import { UUID } from "crypto";
+import { validate } from "uuid";
 
 type UserCreate = z.infer<typeof SignUpFormSchema>;
 
@@ -86,8 +88,8 @@ export async function loginUser(
 }
 
 export async function getAllEvents(): Promise<{
-    err: boolean;
-    data: Event[] | null;
+    error: undefined | string;
+    data: Event[] | undefined;
 }> {
     try {
         const res = await fetch("http://localhost:8080/events");
@@ -99,13 +101,51 @@ export async function getAllEvents(): Promise<{
         const data = await res.json();
         console.log(data);
         return {
-            err: false,
+            error: undefined,
             data: data,
         };
-    } catch (error) {
+    } catch (err) {
+        if (err instanceof Error) {
+            return { data: undefined, error: err.message };
+        } else {
+            return { data: undefined, error: "Something Went Wrong" };
+        }
+    }
+}
+
+export async function getEventById(id: string): Promise<{
+    error: undefined | string;
+    data: Event | undefined;
+}> {
+    try {
+        if (!id || id.trim() === "") {
+            throw new Error(
+                "Invalid ID: ID cannot be null, blank, or undefined."
+            );
+        }
+        if (!validate(id)) {
+            throw new Error("Invalid ID: Not a valid UUID format.");
+        }
+
+        const uuid: UUID = id as UUID;
+
+        const res = await fetch(`http://localhost:8080/events/${id}`);
+
+        if (!res.ok) {
+            throw new Error("500-Internal Server Error");
+        }
+
+        const data = await res.json();
+        console.log(data);
         return {
-            err: false,
-            data: null,
+            data: data,
+            error: undefined,
         };
+    } catch (err) {
+        if (err instanceof Error) {
+            return { data: undefined, error: err.message };
+        } else {
+            return { data: undefined, error: "Something Went Wrong" };
+        }
     }
 }
