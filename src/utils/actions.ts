@@ -129,7 +129,7 @@ export async function getEventById(id: string): Promise<{
 
         const uuid: UUID = id as UUID;
 
-        const res = await fetch(`http://localhost:8080/events/${id}`);
+        const res = await fetch(`http://localhost:8080/events/${uuid}`);
 
         if (!res.ok) {
             throw new Error("500-Internal Server Error");

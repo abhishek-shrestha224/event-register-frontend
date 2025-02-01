@@ -71,7 +71,7 @@ const Page = () => {
                                         <p className="font-medium w-36">
                                             Event Date:
                                         </p>
-                                        <p>{event.venue}</p>
+                                        <p>{event.eventDate}</p>
                                     </div>
                                     <button
                                         type="button"

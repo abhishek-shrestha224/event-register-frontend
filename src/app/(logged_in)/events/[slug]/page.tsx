@@ -18,6 +18,19 @@ export default async function Page({
                 <Error error={error} />
                 {data && (
                     <>
+                        <main className="text-left py-8 font-bold lg:text-lg">
+                            <h5 className="font-semibold text-2xl mb-5">
+                                {data.name}
+                            </h5>
+                            <div className="flex font-medium mb-3">
+                                <p className="font-medium w-36">Venue:</p>
+                                <p>{data.venue}</p>
+                            </div>
+                            <div className="flex font-medium mb-5">
+                                <p className="font-medium w-36">Event Date:</p>
+                                <p>{data.eventDate}</p>
+                            </div>
+                        </main>
                         <EventRegistrationForm />
                     </>
                 )}
